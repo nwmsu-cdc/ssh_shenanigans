@@ -1,0 +1,42 @@
+services:
+  caddy:
+    image: caddy:latest
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - $PWD/caddy_conf:/etc/caddy
+      - $PWD/caddy_site:/srv
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      bastion_net:
+        ipv4_address: 10.5.0.5
+
+  bastion_server: 
+    hostname: Bastion Server
+    build: 
+      context: .
+      dockerfile: server
+    ports:
+      - "22:22"
+    networks:
+      bastion_net:
+        ipv4_address: 10.5.0.6
+
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  bastion_net: 
+    driver: bridge
+    ipam: 
+      config:
+        - subnet: 10.5.0.0/24
+          gateway: 10.5.0.1

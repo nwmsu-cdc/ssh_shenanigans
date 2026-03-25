@@ -1,0 +1,26 @@
+FROM ubuntu
+
+run apt update && apt install figlet lolcat openssh-server -y 
+run mkdir /var/run/sshd
+
+run rm /etc/update-motd.d/*
+run echo "#!/bin/sh" >> /etc/update-motd.d/99-lolcat
+run echo 'figlet -f slant $(hostname) | /usr/games/lolcat -f -F 0.3' >> /etc/update-motd.d/99-lolcat
+run chmod +x /etc/update-motd.d/99-lolcat
+run echo "" > /etc/motd
+
+
+run useradd admin -m -s /bin/sh; echo "admin:admin" | chpasswd
+# run echo "root:root" | chpasswd
+
+# run sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/" -i /etc/ssh/sshd_config
+
+run sed -i 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' \
+    /etc/pam.d/sshd /etc/pam.d/login /etc/pam.d/common-session && \
+    sed -i '/pam_tally2.so\|pam_faillock.so/d' \
+    /etc/pam.d/sshd /etc/pam.d/login /etc/pam.d/common-session || true
+
+expose 22
+
+cmd ["/usr/sbin/sshd","-D"]
+#cmd ["bash"]
