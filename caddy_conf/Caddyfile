@@ -1,5 +1,10 @@
-localhost:80 {
-  auto_https disable_redirects
+ {
+	auto_https off
+	http_port 80
+	https_port 0
+}
+
+http://localhost:80 {
   root /srv
   file_server 
 }
