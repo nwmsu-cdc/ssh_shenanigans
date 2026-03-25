@@ -52,7 +52,15 @@ services:
       internal2_net:
         ipv4_address: 10.7.0.11
 
-
+  caddy1:
+    image: caddy:latest
+    restart: unless-stopped
+    volumes:
+      - $PWD/internal_caddy/1/conf:/etc/caddy
+      - $PWD/internal_caddy/1/site:/srv
+    networks:
+      internal_net:
+        ipv4_address: 10.6.0.50
 
 volumes:
   caddy_data:
