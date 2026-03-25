@@ -10,7 +10,7 @@ run chmod +x /etc/update-motd.d/99-lolcat
 run echo "" > /etc/motd
 
 
-run useradd admin -m -s /bin/sh; echo "admin:admin" | chpasswd
+run useradd admin -m -s /bin/bash; echo "admin:admin" | chpasswd
 # run echo "root:root" | chpasswd
 
 # run sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/" -i /etc/ssh/sshd_config
