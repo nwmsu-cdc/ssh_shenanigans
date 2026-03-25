@@ -19,6 +19,7 @@ services:
 
   bastion_server: 
     hostname: Bastion Server
+    restart: unless-stopped
     build: 
       context: .
       dockerfile: server
