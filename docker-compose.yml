@@ -44,6 +44,8 @@ services:
     build: 
       context: .
       dockerfile: server
+    volumes:
+      - internal_caddy_share:/home/admin/public_html
     networks:
       internal_net:
         ipv4_address: 10.6.0.11
@@ -59,10 +61,20 @@ services:
     networks:
       internal_net:
         ipv4_address: 10.6.0.50
+  caddy2:
+    image: caddy:latest
+    restart: unless-stopped
+    volumes:
+      - $PWD/internal_caddy/2/conf:/etc/caddy
+      - internal_caddy_share:/srv
+    networks:
+      internal_net:
+        ipv4_address: 10.6.0.50
 
 volumes:
   caddy_data:
   caddy_config:
+  internal_caddy_share:
 
 networks:
   bastion_net: 
