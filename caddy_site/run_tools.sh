@@ -1,3 +1,4 @@
+mkdir ssh_config 2> /dev/null
 podman build -f <(cat << EOF
 FROM ubuntu
 run apt update && apt install nmap ssh proxychains vim nano -y 
@@ -6,4 +7,4 @@ cmd ["/bin/bash"]
 EOF
 ) -t ssh_tools; 
 # podman network create ssh_tools_net --subnet 10.88.0.0/24 --gateway 10.88.0.1;
-podman run -it --network podman -P --ip=10.88.0.8 -e TERM=xterm-256color ssh_tools;
+podman run -it -v $(pwd)/ssh_config:/root/.ssh --network podman -P --ip=10.88.0.8 -e TERM=xterm-256color -w /root ssh_tools;
