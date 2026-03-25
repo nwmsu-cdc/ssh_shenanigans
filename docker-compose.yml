@@ -40,6 +40,18 @@ services:
     networks:
       internal_net:
         ipv4_address: 10.6.0.10
+  internal2_server: 
+    hostname: Internal2_Server
+    restart: unless-stopped
+    build: 
+      context: .
+      dockerfile: server
+    networks:
+      internal_net:
+        ipv4_address: 10.6.0.11
+      internal2_net:
+        ipv4_address: 10.7.0.11
+
 
 
 volumes:
@@ -59,3 +71,9 @@ networks:
       config:
         - subnet: 10.6.0.0/24
           gateway: 10.6.0.1
+  internal2_net: 
+    driver: bridge
+    ipam: 
+      config:
+        - subnet: 10.7.0.0/24
+          gateway: 10.7.0.1
