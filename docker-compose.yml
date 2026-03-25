@@ -24,7 +24,7 @@ services:
       context: .
       dockerfile: server
     ports:
-      - "22:22"
+      - "23:22"
     networks:
       bastion_net:
         ipv4_address: 10.5.0.6
