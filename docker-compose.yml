@@ -67,6 +67,13 @@ services:
     volumes:
       - $PWD/internal_caddy/2/conf:/etc/caddy
       - internal_caddy_share:/srv
+
+    command: > 
+      /bin/sh -c "
+        chown -R 1001:1001 /srv &&
+        chmod -R g+rw /srv &&
+        caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+      "
     networks:
       internal_net:
         ipv4_address: 10.6.0.50
