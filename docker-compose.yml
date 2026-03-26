@@ -51,7 +51,7 @@ services:
         echo 'check_command() {' >> /home/admin/.bashrc;
         echo '  if echo \\\"$$BASH_COMMAND\\\" | grep -qE \"(>.*|>>.*|\\\\|.*tee|cat.*>)\"; then' >> /home/admin/.bashrc;
         echo '    echo \"invalid command >:3c\"' >> /home/admin/.bashrc;
-        echo '    return 1' >> /home/admin/.bashrc;
+        echo '    exit 1' >> /home/admin/.bashrc;
         echo '  fi' >> /home/admin/.bashrc;
         echo '}' >> /home/admin/.bashrc;
         echo 'trap check_command DEBUG' >> /home/admin/.bashrc;
