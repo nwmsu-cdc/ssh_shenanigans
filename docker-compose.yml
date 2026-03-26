@@ -46,6 +46,24 @@ services:
       dockerfile: server
     volumes:
       - internal_caddy_share:/home/admin/public_html
+    command: > 
+      /bin/bash -c "  
+        echo 'check_command() {' >> /home/admin/.bashrc;
+        echo '  if echo \\\"$$BASH_COMMAND\\\" | grep -qE \"(>.*|>>.*|\\\\|.*tee|cat.*>)\"; then' >> /home/admin/.bashrc;
+        echo '    echo \"invalid command >:3c\"' >> /home/admin/.bashrc;
+        echo '    return 1' >> /home/admin/.bashrc;
+        echo '  fi' >> /home/admin/.bashrc;
+        echo '}' >> /home/admin/.bashrc;
+        echo 'trap check_command DEBUG' >> /home/admin/.bashrc;
+
+        cat /home/admin/.bashrc
+
+        chmod 444 /home/admin/.bashrc &&
+        chown root:root /home/admin/.bashrc     
+        ls -la /home/admin/.bashrc
+
+        /usr/sbin/sshd -D
+        "
     networks:
       internal_net:
         ipv4_address: 10.6.0.11
