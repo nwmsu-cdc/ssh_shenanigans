@@ -1,0 +1,93 @@
+<h1 data-background-image="./rainbow.svg" id="what-is-ssh">What is
+SSH</h1>
+<blockquote>
+<ul>
+<li>Usually on port 22</li>
+<li>Client &lt;-&gt; Server</li>
+</ul>
+</blockquote>
+<style>
+@font-face {
+  font-family: "ComicSansWeb";
+  src: url("./Comic-Sans-MS-400.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+:root {
+  --r-background-color: #DCDF25;
+  --r-main-font: ComicSansWeb, sans-serif;
+  --r-main-color: #264BDE;
+  --r-heading-font: ComicSansWeb, sans-serif;
+  --r-heading-color: #264BDE;
+}
+</style>
+<h1 data-background-image="./rainbow.svg"
+id="getting-your-tools">Getting Your Tools! :)</h1>
+<p>After downloading the tools from the lab server</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> Downloads</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sh</span> ssh_tools.sh </span></code></pre></div>
+<h1 data-background-image="./rainbow.svg"
+id="accessing-a-server">Accessing a Server</h1>
+<p><br/> <br/></p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> username@server</span></code></pre></div>
+<p>On our server SSH is hosted on port 23!!!</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> admin@server_ip <span class="at">-p</span> 23</span></code></pre></div>
+<h1 data-background-image="./rainbow.svg" id="config-file">Config
+File</h1>
+<p>Having to type <code>-p 23</code> is cringe. Passwords are also
+cRinGe!</p>
+<p>. . .</p>
+<p>Lets use a config instead</p>
+<pre class="config" data-line-numbers=""><code>Host bastion
+        HostName HOST_IP
+        User admin
+        Port 23
+</code></pre>
+<h1 data-background-image="./rainbow.svg" id="identity-files">Identity
+Files :)</h1>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/.ssh</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh-keygen</span> <span class="at">-t</span> ed25519 <span class="co"># After you can type the name of the file</span></span></code></pre></div>
+<p>. . .</p>
+<pre class="config" data-line-numbers=""><code>Host bastion
+        HostName HOST_IP
+        User admin
+        Port 23
+        IdentityFile ~/.ssh/bastion
+</code></pre>
+<h1 data-background-image="./rainbow.svg"
+id="running-remote-commands">Running Remote Commands</h1>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> bastion <span class="st">&quot;sleep 10; hostname&quot;</span> <span class="co"># runs and keeps you hostage</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> bastion <span class="at">-f</span> <span class="st">&quot;sleep 10; hostname&quot;</span> <span class="co"># runs and lets you be FREE!!!!!</span></span></code></pre></div>
+<h1 data-background-image="./rainbow.svg" id="dynamic-proxies-3">Dynamic
+Proxies :3</h1>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode bash bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-D</span> <span class="pp">[</span><span class="ss">port</span><span class="pp">]</span> <span class="pp">[</span><span class="ss">host</span><span class="pp">]</span> <span class="at">-fN</span> <span class="co"># fork with no command </span></span></code></pre></div>
+<p>Set up a socks proxy on a port ( you can configure firefox to use it
+too! )</p>
+<p>. . .</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode bash bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-D</span> 9050 bastion <span class="at">-fN</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Proxychains defaults to 9050 (/etc/proxchains.conf)</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="ex">proxychains</span> curl 10.5.0.5 <span class="co"># curls from the servers PoV</span></span></code></pre></div>
+<h1 data-background-image="./rainbow.svg" id="jump-hosts">Jump
+Hosts</h1>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a> <span class="fu">ssh</span> <span class="at">-J</span> bastion admin@internal <span class="co"># connects to internal via bastion</span></span></code></pre></div>
+<pre class="config" data-line-numbers=""><code>Host bastion
+        HostName HOST_IP
+        User admin
+        Port 23
+        IdentityFile ~/.ssh/bastion
+
+Host internal
+        HostName 10.6.0.10
+        User admin
+        ProxyJump bastion
+        IdentityFile ~/.ssh/internal
+</code></pre>
