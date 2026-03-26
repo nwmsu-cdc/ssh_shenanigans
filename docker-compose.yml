@@ -26,8 +26,6 @@ services:
     networks:
       bastion_net:
         ipv4_address: 10.5.0.6
-      internal_net:
-        ipv4_address: 10.6.0.6
 
   internal_server: 
     hostname: Internal_Server
@@ -36,6 +34,8 @@ services:
       context: .
       dockerfile: server
     networks:
+      bastion_net:
+        ipv4_address: 10.5.0.10
       internal_net:
         ipv4_address: 10.6.0.10
   internal2_server: 
