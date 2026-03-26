@@ -76,7 +76,7 @@ services:
       "
     networks:
       internal_net:
-        ipv4_address: 10.6.0.50
+        ipv4_address: 10.6.0.51
 
 volumes:
   caddy_data:
